@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>视频直播CDN技术 &mdash; 朝花夕拾</title>
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/collection.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/common.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/2019/07/16/vedio_cnd/">
+    <link rel="alternate" type="application/atom+xml" title="朝花夕拾" href="http://localhost:4000/feed.xml">
+    <link rel="shortcut icon" href="http://localhost:4000/favicon.ico">
+    
+    <meta property="og:title" content="视频直播CDN技术">
+      
+    <meta name="keywords" content="CDN,network">
+    <meta name="og:keywords" content="CDN,network">
+      
+    <meta name="description" content="视频直播CDN技术">
+    <meta name="og:description" content="视频直播CDN技术">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/2019/07/16/vedio_cnd/">
+    <meta property="og:site_name" content="朝花夕拾">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2019-07-16">
+    
+    <script src="http://localhost:4000/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="http://localhost:4000/assets/js/jquery-ui.js"></script>
+    <script src="http://localhost:4000/assets/js/main.js"></script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="http://localhost:4000/" title="朝花夕拾"><span class="octicon octicon-mark-github"></span> 朝花夕拾</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="http://localhost:4000/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="http://localhost:4000/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="http://localhost:4000/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="http://localhost:4000/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="http://localhost:4000/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="视频直播CDN技术">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">视频直播CDN技术</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2019/07/16
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#CDN" title="CDN">CDN</a>
+          </span>
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#网络" title="网络">网络</a>
+          </span>
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#技术" title="技术">技术</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <h1 id="视频直播cdn技术">视频直播CDN技术</h1>
+
+<h2 id="定义">定义</h2>
+
+<h3 id="视频">视频</h3>
+
+<p>通常我们所说的视频，是指<strong>连续的图像变化每秒超过24帧（Frame）画面以上</strong>时，根据视觉暂留原理，人眼无法辨别单幅的静态画面，看上去是平滑连续的视觉效果，这样连续的画面叫做视频。</p>
+
+<h3 id="转码">转码</h3>
+
+<p>媒体转码是指将一段多媒体包括音频、视频或者其他的内容从一种编码格式转换成为另外一种编码格式。</p>
+
+<h3 id="码率">码率</h3>
+
+<p>码率是数据传输时单位时间传送的数据位数，一般我们用的单位是kbps即千位每秒。通俗一点的理解就是取样率，单位时间内取样率越大，精度就越高，处理出来的文件就越接近原始文件，但是文件体积与取样率是成正比的，所以几乎所有的编码格式重视的都是如何用最低的码率达到最少的失真。但是因为编码算法不一样，所以也不能用码率来统一衡量音质或画质。</p>
+
+<h3 id="帧">帧</h3>
+
+<p>它是一段数据的组合，是数据传输的基本单位。就是影像动画中最小单位的单幅影像画面，相当于电影胶片上的每一格镜头。一帧就是一副静止的画面，连续的帧就形成动画，如电视图像等。</p>
+
+<h3 id="帧率">帧率</h3>
+
+<p>每秒显示的帧数，帧率表示图形处理器处理时每秒能够更新的次数。高的帧率可以得到更流畅、更逼真的动画。一般来说30fps就是可以接受的。但是将性能提升至60fps则可以明显提升交互干和逼真感，但是一般来说超过75fps一般就不容易察觉到有明显的流畅度提升了。如果帧率超过屏幕刷新率只会浪费图形处理的能力，因为显示器不能以这么快的速度更新，这样超过刷新率的帧率就浪费掉了。</p>
+
+<p><img src="/assets/image-20190714204141209.png" alt="image-20190714204141209" /></p>
+
+<p><strong>音频帧一般可以独立解码，可以直接播放。</strong></p>
+
+<p>而视频分为视频关键帧和非关键帧，<strong>关键帧可以独立解码渲染</strong>，播放器拿到后可以直接看到画面，一般10k以上甚至几十k；其他非关键帧解码依赖于前面的一些视频帧，<strong>播放器会根据前面的帧和这一帧（非关键帧）来解码产生画面</strong>，非关键帧一般大小是几k甚至不到1k。<strong>对于播放器来说，服务器一般会从视频关键帧开始发送，这样才不会产生花屏</strong>。</p>
+
+<p>对于节点上直播服务器存储的内容，如果是文件加速，节点上存储的内容很明确，就是文件数据，URL不变的话文件数据内容也不变。但是对于直播来讲，传输的就是帧数据，缓存的也是不断变化的帧序列数据。</p>
+
+<p>下面的图里我们可以看到，当前的服务器缓存了 V1-V3 五帧数据，当 V4 这个关键帧出现了，服务器把之前的丢掉，开始缓存 V4 开始的音视频数据，以这个策略保证过来的播放端都是当前最新的数据。一般直播服务器都是用这个策略来进行服务器缓存的。</p>
+
+<p><img src="/assets/d3fc57ebe4fe4a52ac05f8b28d61c60d.jpeg" alt="img" /></p>
+
+<h2 id="直播和点播的异同">直播和点播的异同</h2>
+
+<h3 id="相同点">相同点</h3>
+
+<p>对于播放端来说，直播和点播都是向服务器获取视频数据，播放端对声音和画面进行播放的过程。从这个角度来讲，直播和点播区别不大。</p>
+
+<h3 id="差异">差异</h3>
+
+<p>点播可以选择快进和回退，直播却不能。</p>
+
+<p>直播就是每一帧数据打上时序标签后进行流式传输的过程，发送端源源不断的采集音视频数据，经过编码、封包、推流、再经过分发网络进行扩散传播，播放端再源源不断地下载数据并按时序进行解码播放。如此就产生了边生产、边传输、边消费的直播过程。</p>
+
+<p>我们将视频直播整个流程主要分为几个关键阶段：视频采集、前处理、编码、推流、转码、分发、播放，如下图。</p>
+
+<p><img src="/assets/image-20190715182615646.png" alt="image-20190715182615646" /></p>
+
+<h4 id="1-采集">1. 采集</h4>
+
+<p>是视频直播开始的第一个环节，用户可以通过不同的终端采集视频，也就是主播直播的过程。</p>
+
+<h4 id="2-前处理">2. 前处理</h4>
+
+<p>美颜，水印、模糊特效等。（针对不同的终端要提供不同的处理库）</p>
+
+<h4 id="3-编码">3. 编码</h4>
+
+<p>编码时候我们需要处理硬件兼容性问题和寻求码率和画质之前的平衡。</p>
+
+<h4 id="4-推流与转码">4. 推流与转码</h4>
+
+<p>在数据传输的整个过程中从主播端到服务端，再到边缘节点，以及从边缘节点到播放端。为了让采集端的流适配各个平台端不同协议，一般都会在服务端进行转码处理，将视频文件转成不同格式，支持 RTMP、HLS 和 FLV 等不同的协议。</p>
+
+<h4 id="5-分发">5. 分发</h4>
+
+<p>随着移动直播兴起和游戏直播的持续火热，网络直播平台支持亿级高并发是理论上应该做到的，为了优化终端观看直播的体验，一般都会采用 CDN 进行内容分发加速，实现高并发等能力。</p>
+
+<h4 id="6-客户端播放">6. 客户端播放</h4>
+
+<p>也就是解码和渲染。通常秒开、低延迟等问题是需要在播放端来克服的。</p>
+
+<h2 id="直播架构">直播架构</h2>
+
+<p><img src="/assets/c49f73abfa0e4da69bd33bf3d2725e8c.jpeg" alt="img" /></p>
+
+<ul>
+  <li>
+    <p>对于推流端推流，目前主要使用的是 RTMP 协议，播放可以使用 RTMP、HTTP FLV 和 HLS 协议，常用的推流端是 OBS、手机 APP、FFmpeg；播放端包括 Flash、VLC、HTML5、手机 APP 等形式；</p>
+  </li>
+  <li>
+    <p>视频直播中心拥有稳定的推流上行链路，支持连麦、IM、直播间管理等分丰富的直播服务端实现流能力；</p>
+  </li>
+  <li>
+    <p>CDN 直播分发提供流畅的播放下行链路，700 多个国内节点和 300 多个海外节点，还有丰富的小运营商节点。</p>
+  </li>
+  <li>
+    <p>对于播放端，我们做了首屏秒开优化和弱网跳帧播放，确保用户体验。</p>
+  </li>
+</ul>
+
+<p>视频直播是非常典型的发布和订阅关系。</p>
+
+<p>从下图可以看到，主播完成发布动作，这条直播内容也就是这一路流推动到服务器，三个观众也就是订阅者，从服务器拉流，也就是用播放动作来完成推流。这种进程内部、节点之间的发布、订阅关系是一种级联的关系，CDN 的直播分发就是依靠这种模式构建。</p>
+
+<p><img src="/assets/338430fb45324b758cf1b7d439744d96.jpeg" alt="img" /></p>
+
+<h3 id="internet-backboneinternet-骨干网">Internet backbone：Internet 骨干网</h3>
+
+<p>几台计算机连接起来，互相可以看到其他人的文件，这叫局域网，整个城市的计算机都连接起来，就是城域网。<strong>把城市之间连接起来的网就叫骨干网</strong>。<strong>这些骨干网是国家批准的可以直接和国外连接的互联网</strong>。其他有接入功能的ISP（互联网服务提供商）想连到国外都得通过这些骨干网。</p>
+
+<h3 id="基础架构">基础架构</h3>
+
+<p>内容通过存储集群到达发布集群，再通过骨干中转环境的 L2，利用 CDN 智能调度到达 L1，也就是距离用户最近的节点，从顺利的推送给用户。</p>
+
+<p><img src="/assets/c77d9e2e7aeb4914b747b2c937e2a528.jpeg" alt="img" /></p>
+
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+
+  
+
+  
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+        <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <script>
+        var gitalk = new Gitalk({
+            id: '/2019/07/16/vedio_cnd/',
+            clientID: 'e7435f0a5f250ac4d34e',
+            clientSecret: 'ac91c03346a9143bc06ba5fc37431917f701df2d',
+            repo: 'blog-comments',
+            owner: 'chenjunming',
+            admin: ['chenjunming'],
+            labels: ['gitment'],
+            perPage: 50,
+        })
+        gitalk.render('gitalk-container')
+        </script>
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="http://localhost:4000/assets/css/modules/sidebar-search.css">
+<script src="http://localhost:4000/assets/js/simple-jekyll-search.min.js"></script>
+<script src="http://localhost:4000/assets/js/search.js"></script>
+
+<script type="text/javascript">
+SimpleJekyllSearch({
+    searchInput: document.getElementById('search_box'),
+    resultsContainer: document.getElementById('search_results'),
+    json: 'http://localhost:4000/assets/search_data.json',
+    searchResultTemplate: '<li><a href="{url}" title="{desc}">{title}</a></li>',
+    noResultsText: 'No results found',
+    limit: 10,
+    fuzzy: false,
+    exclude: ['Welcome']
+})
+</script>
+
+    
+
+    
+<h3 class="post-directory-title mobile-hidden">Table of Contents</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="http://localhost:4000/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="CHEN junming">CHEN junming</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="https://github.com/chenjunming/chenjunming.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="http://localhost:4000/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/about/" title="关于" target="">关于</a>
+                </li>
+                
+                <li><a href="http://localhost:4000/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <div class="tools-wrapper">
+      <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a>
+    </div>
+    <!-- / footer -->
+    <script src="http://localhost:4000/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="http://localhost:4000/assets/js/geopattern.js"></script>
+    <script src="http://localhost:4000/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>

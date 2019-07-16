@@ -73,6 +73,13 @@
     } ,
   
     {
+      "title"    : "视频直播CDN技术",
+      "category" : "CDN",
+      
+      "url"      : "http://localhost:4000/2019/07/16/vedio_cnd/"
+    } ,
+  
+    {
       "title"    : "Android Studio",
       "category" : "Android",
       
