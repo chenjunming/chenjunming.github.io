@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>LSM树 &mdash; 朝花夕拾</title>
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/collection.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/common.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/2019/09/09/LSM/">
+    <link rel="alternate" type="application/atom+xml" title="朝花夕拾" href="http://localhost:4000/feed.xml">
+    <link rel="shortcut icon" href="http://localhost:4000/favicon.ico">
+    
+    <meta property="og:title" content="LSM树">
+      
+    <meta name="keywords" content="LSM">
+    <meta name="og:keywords" content="LSM">
+      
+    <meta name="description" content="LSM树">
+    <meta name="og:description" content="LSM树">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/2019/09/09/LSM/">
+    <meta property="og:site_name" content="朝花夕拾">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2019-09-09">
+    
+    <script src="http://localhost:4000/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="http://localhost:4000/assets/js/jquery-ui.js"></script>
+    <script src="http://localhost:4000/assets/js/main.js"></script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="http://localhost:4000/" title="朝花夕拾"><span class="octicon octicon-mark-github"></span> 朝花夕拾</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="http://localhost:4000/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="http://localhost:4000/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="http://localhost:4000/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="http://localhost:4000/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="http://localhost:4000/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="LSM树">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">LSM树</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2019/09/09
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#数据结构" title="数据结构">数据结构</a>
+          </span>
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#LSM" title="LSM">LSM</a>
+          </span>
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#技术" title="技术">技术</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <h1 id="lsm树">LSM树</h1>
+
+<h2 id="诞生原因">诞生原因</h2>
+
+<p>传统关系型数据库使用btree或一些变体作为存储结构，能高效进行查找。但保存在磁盘中时它也有一个明显的缺陷，那就是<strong>逻辑上相离很近但物理却可能相隔很远</strong>，这就可能造成大量的磁盘随机读写。<strong>随机读写比顺序读写慢很多</strong>，为了提升IO性能，我们需要一种能将随机操作变为顺序操作的机制，于是便有了LSM树。<strong>LSM树能让我们进行顺序写磁盘，从而大幅提升写操作，作为代价的是牺牲了一些读性能</strong>。</p>
+
+<h2 id="lsm树原理">LSM树原理</h2>
+
+<p>LSM树由两个或以上的存储结构组成。为了说明简单，我们用两个存储结构来说明。一个存储结构常驻内存，称为C0 tree可以是任意方便键值对查找的数据结构，例如map，红黑树等；另一个存储结构常驻硬盘，类似B+树，C1的所有节点都是满的，节点大小等于磁盘块大小。</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvwabvmt67j20mb08074p.jpg"><img src="/assets/910E16A4-A7DB-0F42-B917-373E31CF1E4E.png" alt="image" /></a></p>
+
+<h2 id="插入步骤">插入步骤</h2>
+
+<p>大体思路：插入一条记录时，先插入一条日志到末尾（append）。然后数据先插入到C0，因为是存储在内存中，所以是不涉及IO的；然后当C0 大小达到一个阈值，将C0记录滚动合并到C1中；对于多个存储结构，则逐层向上合并。</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyan6q5iuj20lm06p0v1.jpg"><img src="/assets/FB74459A-1F5F-D043-A93A-F2C134EF06AB.png" alt="image" /></a></p>
+
+<h2 id="示例">示例</h2>
+
+<p>这里C0树使用AVL树，插入A，日志文件追加记录，再插入C0</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvym675zwpj20sf0fytza.jpg"><img src="/assets/A18998ED-D4E9-E145-BB14-9E8FC7A731D2.png" alt="image" /></a></p>
+
+<p>插入E</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvytpc19bqj20se0gkhdf.jpg"><img src="/assets/1F18E33F-DB26-D440-9CC3-4774E186EA72.png" alt="image" /></a></p>
+
+<p>插入L</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyts9vuqgj20sb0gfu0f.jpg"><img src="/assets/8685EC9C-F344-A545-A98F-27397BC1504F.png" alt="image" /></a></p>
+
+<p>插入“R”“U”，旋转后最终如下。</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyv2am7l6j20s30g9nom.jpg"><img src="/assets/A6EB5771-D8E1-C147-B71C-65F333256F13.png" alt="image" /></a></p>
+
+<p>假如此时触发合并，因为C1还没有树，所以emptying block为空，直接从C0树从小到大依次找节点，放到filling blcok。</p>
+
+<p>放入最小节点A。</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyv4durm3j20s50g7hcr.jpg"><img src="/assets/4688AC4A-77A6-8C42-B0B7-F837E833BFFD.png" alt="image" /></a></p>
+
+<p>第二小节点E</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyv5tiaysj20ry0fv4or.jpg"><img src="/assets/BCEA6E9F-F1E5-414F-A7B2-9CC31F882CB7.png" alt="image" /></a></p>
+
+<p>如此类推直到填满filling blcok</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyv94hhgxj20ro0fvtyi.jpg"><img src="/assets/1586EDAE-5072-3943-9FE9-BE46E08FF952.png" alt="image" /></a></p>
+
+<p>写入C1（B+树）</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyvcl95rsj20rm0fw4od.jpg"><img src="/assets/E4ADE200-B8C5-2343-9A70-094883D09784.png" alt="image" /></a></p>
+
+<p>继续插入B F N T，先分别写日志，然后插入到内存的C0树中，</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyvfu7o7vj20s30g0tzt.jpg"><img src="/assets/7FD813DF-0ECC-C740-9B7B-E50A7A605FE0.png" alt="image" /></a></p>
+
+<p>假如此时触发合并，先加载C1的最左节点（最小）到emptying blcok</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyvvf2qe4j20s40gcnok.jpg"><img src="/assets/54BCAFA3-4E62-7E40-84CB-811BEEE755C5.png" alt="image" /></a></p>
+
+<p>然后将C0树的节点和emptying blcok 合并排序，首先是A进入filling blcok</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyw1b3aioj20s70g6qu0.jpg"><img src="/assets/DA22C7CD-4005-CD42-8402-4BB03FD88621.png" alt="image" /></a></p>
+
+<p>然后是B</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyw4txnntj20rz0fuqte.jpg"><img src="/assets/3B845EA3-C248-2E48-829D-455B4A4687F4.png" alt="image" /></a></p>
+
+<p>如此类推</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyw7cxxq1j20rh0g77ua.jpg"><img src="/assets/017566F2-383D-1847-A60C-26D6C8DDD0C5.png" alt="image" /></a></p>
+
+<p>将filling blcok追加到磁盘的新位置，将原来的节点删掉</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvywe17gonj20rj0fqkh6.jpg"><img src="/assets/1E99999C-0D7B-FD46-93E2-27B3DAAE2FB0.png" alt="image" /></a></p>
+
+<p>继续合并，再次填满filling blcok</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvywk53gmej20rw0gd1jo.jpg"><img src="/assets/B99A1113-1DAA-254C-935D-3732983C3F49.png" alt="image" /></a></p>
+
+<p>将filling blcok 追加到磁盘的新位置，</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvywtrigujj20uj0fw1kx.jpg"><img src="/assets/0A43D0DA-54FB-D345-9674-F7F00FF98BED.png" alt="image" /></a></p>
+
+<h2 id="查找">查找</h2>
+
+<p>总体思想是从最顶层开始查找，如果C0不存在，继续去C1找如此类推。</p>
+
+<p>例如要找“B”，从C0开始找没找到</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyxegpe23j20u70g71kx.jpg"><img src="/assets/063410EB-8798-C448-B417-4267C6906A1D.png" alt="image" /></a></p>
+
+<p>然后找C1树 树根开始找</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyxgsbj4tj20v40g84qp.jpg"><img src="/assets/6F9F9839-0F52-174C-93C4-6E582A09DA80.png" alt="image" /></a></p>
+
+<p>找到“B”。</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyxikpcjjj20v70fn1kx.jpg"><img src="/assets/56823EF4-20B7-8449-8BDB-1951C28290DD.png" alt="image" /></a></p>
+
+<h2 id="删除操作">删除操作</h2>
+
+<p>删除为了能快速执行，标记一下，等下次合并的时候删除相应的记录。</p>
+
+<p>加入要删除“U”，假设标为“#”的表示删除</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyxstu99nj20ui0gj4qp.jpg"><img src="/assets/4EA4D5A1-50B5-EF44-A3DD-95F1F1754071.png" alt="image" /></a></p>
+
+<p>而如果要删除的key不在C0，则只需要在C0中标志该key已删除，而不需要去硬盘查找。</p>
+
+<p><a href="https://gitee.com/chenssy/blog-home/raw/master/image/series-images/sjjg/sjjg-kt/b905aa66ly1fvyxwx9l7nj20uh0fw1kx.jpg"><img src="/assets/511043A0-B736-884B-B154-9EC23A8AB386.png" alt="image" /></a></p>
+
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+
+  
+
+  
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+        <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <script>
+        var gitalk = new Gitalk({
+            id: '/2019/09/09/LSM/',
+            clientID: 'e7435f0a5f250ac4d34e',
+            clientSecret: 'ac91c03346a9143bc06ba5fc37431917f701df2d',
+            repo: 'blog-comments',
+            owner: 'chenjunming',
+            admin: ['chenjunming'],
+            labels: ['gitment'],
+            perPage: 50,
+        })
+        gitalk.render('gitalk-container')
+        </script>
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="http://localhost:4000/assets/css/modules/sidebar-search.css">
+<script src="http://localhost:4000/assets/js/simple-jekyll-search.min.js"></script>
+<script src="http://localhost:4000/assets/js/search.js"></script>
+
+<script type="text/javascript">
+SimpleJekyllSearch({
+    searchInput: document.getElementById('search_box'),
+    resultsContainer: document.getElementById('search_results'),
+    json: 'http://localhost:4000/assets/search_data.json',
+    searchResultTemplate: '<li><a href="{url}" title="{desc}">{title}</a></li>',
+    noResultsText: 'No results found',
+    limit: 10,
+    fuzzy: false,
+    exclude: ['Welcome']
+})
+</script>
+
+    
+
+    
+<h3 class="post-directory-title mobile-hidden">Table of Contents</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="http://localhost:4000/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="CHEN junming">CHEN junming</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="https://github.com/chenjunming/chenjunming.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="http://localhost:4000/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/about/" title="关于" target="">关于</a>
+                </li>
+                
+                <li><a href="http://localhost:4000/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <div class="tools-wrapper">
+      <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a>
+    </div>
+    <!-- / footer -->
+    <script src="http://localhost:4000/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="http://localhost:4000/assets/js/geopattern.js"></script>
+    <script src="http://localhost:4000/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>
