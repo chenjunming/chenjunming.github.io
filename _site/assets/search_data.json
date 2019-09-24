@@ -87,6 +87,13 @@
     } ,
   
     {
+      "title"    : "Paxos",
+      "category" : "Paxos",
+      
+      "url"      : "http://localhost:4000/2019/09/24/Paxos/"
+    } ,
+  
+    {
       "title"    : "Android Studio",
       "category" : "Android",
       

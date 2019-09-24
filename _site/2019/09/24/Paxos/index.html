@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>Paxos &mdash; 朝花夕拾</title>
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/collection.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/common.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/2019/09/24/Paxos/">
+    <link rel="alternate" type="application/atom+xml" title="朝花夕拾" href="http://localhost:4000/feed.xml">
+    <link rel="shortcut icon" href="http://localhost:4000/favicon.ico">
+    
+    <meta property="og:title" content="Paxos">
+      
+    <meta name="keywords" content="Paxos">
+    <meta name="og:keywords" content="Paxos">
+      
+    <meta name="description" content="2PC(两阶段提交)">
+    <meta name="og:description" content="2PC(两阶段提交)">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/2019/09/24/Paxos/">
+    <meta property="og:site_name" content="朝花夕拾">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2019-09-24">
+    
+    <script src="http://localhost:4000/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="http://localhost:4000/assets/js/jquery-ui.js"></script>
+    <script src="http://localhost:4000/assets/js/main.js"></script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="http://localhost:4000/" title="朝花夕拾"><span class="octicon octicon-mark-github"></span> 朝花夕拾</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="http://localhost:4000/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="http://localhost:4000/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="http://localhost:4000/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="http://localhost:4000/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="http://localhost:4000/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="Paxos">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">Paxos</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2019/09/24
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#Paxos" title="Paxos">Paxos</a>
+          </span>
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#分布式协议" title="分布式协议">分布式协议</a>
+          </span>
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#技术" title="技术">技术</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <h1 id="2pc两阶段提交">2PC(两阶段提交)</h1>
+
+<p>2PC协议有两个阶段：Propose和Commit</p>
+
+<h2 id="无faliure情况下">无faliure情况下</h2>
+
+<p><img src="/assets/image-20190909183040036.png" alt="image-20190909183040036" /></p>
+
+<h2 id="如果有一个voter在propose投了反对票则通过失败coordinator会在告诉所有voter放弃这个propose">如果有一个voter在propose投了反对票，则通过失败，coordinator会在告诉所有voter放弃这个propose</h2>
+
+<p><img src="/assets/image-20190909200954861.png" alt="image-20190909200954861" /></p>
+
+<h2 id="缺陷">缺陷</h2>
+
+<p>在commit阶段，如果coordinator和voter3都失联了，那么其他voter无法判断现在处于两种场景中的哪一种：</p>
+
+<ol>
+  <li>上轮全票通过然后voter3第一个收到commit的消息然后commit后crash了</li>
+  <li>voter3反对所以干脆没通过。</li>
+</ol>
+
+<p><img src="/assets/image-20190909205531501.png" alt="image-20190909205531501" /></p>
+
+<p>2PC 无法处理这种情况的原因是voter收到propose后，直接就commit，而没有在commit前通知其他节点已经收到propose的结果（commit or not），从而导致在coordinator和voter都掉线的情况下，无法知道当前是应该commit还是abort。为了解决这个问题，3PC了解一下。</p>
+
+<h1 id="3pc三阶段提交">3PC（三阶段提交）</h1>
+
+<h2 id="介绍">介绍</h2>
+
+<p>​	简单来说，3PC就是把2PC的commit阶段拆分为了PreCommit和Commit阶段。通过新增的PreCommit阶段，voter可以知道上一阶段Propose的结果，但不会commit，而进入commit阶段，voter就可以知道其他voter都要commit，所以就能安心commit了。</p>
+
+<p>​	相当于加了一个barrier，在这个barrier之前（PreCommit之前），如果coordinator挂掉，则大家都知道不需要commit，会放弃掉当前的propose然后重新选一个coordinator出来；如果在barrier之后（PreCommit之后）coordinator挂掉，voter知道这是需要commit的，所以也就能安心commit。</p>
+
+<p><img src="/assets/image-20190909211636589.png" alt="image-20190909211636589" /></p>
+
+<h2 id="缺点">缺点</h2>
+
+<ol>
+  <li>不能处理网络分区的情况。
+    <ol>
+      <li>假设在PreCommit阶段所有节点被<strong>一分为二</strong> （图示为3个voter，实际上需要两边的voter相等时才会出现这种情况），收到preCommit 消息的voter在一边，而没有收到这个消息的在另一边，在这种情况下，两边就可能会选出新的coordinator而做出不同的决定</li>
+      <li><img src="/assets/image-20190924142101074.png" alt="image-20190924142101074" /></li>
+    </ol>
+  </li>
+  <li>3PC也不能处理fail-recover 的错误情况。简单来说，当coordinator收到preCommit的确认前crash了，于是voter重新选举一个新的coordinator 出来，当源coordinator重启之后，会向所有voter发送abort，因为它没有收到全部的preCommit 回复，此时可能会出现原coordinator 和 继任 coordinator 发送相矛盾的指令，从而出现节点的状态分歧。</li>
+</ol>
+
+<h1 id="paxos">Paxos</h1>
+
+<h2 id="简介">简介</h2>
+
+<p>从整体上来说，Paxos 算法的目标就是要保证最终有一个提案会被选定，当提案被选定后，进程最终也能获取到被选定的提案。</p>
+
+<h2 id="prepare-阶段">Prepare 阶段</h2>
+
+<ol>
+  <li>
+    <p>leader节点给所有其他acceptor节点发送消息“proposal(n)”——n 是该节点为这个提议选择的一个数字，姑且理解为一个方案编号，并期待该提议获得所有节点中的简单多数（Paxos的Quorum）许可</p>
+  </li>
+  <li>
+    <p>每一个接收到proposal的acceptor节点：</p>
+
+    <ol>
+      <li>
+        <p><strong>如果这是它接收到的第一个proposal</strong>，回答“promise”.代表该节点许诺将会保持承认该proposal发送方为leader，<strong>除非收到其他优先级更高的proposal</strong>；</p>
+
+        <p>如果已经有接收并accepted（注意：<strong>这是下一阶段可能会发生的动作</strong>）其他的proposal(n’,v’)——n’是该proposal的方案号而v’是提议的公式</p>
+
+        <ol>
+          <li>如果n &lt; n’ ，之前accept的提议有更高优先级，对新接受的提议回答“reject”，以兑现之前的许诺</li>
+          <li>如果n &gt; n’，回答“promise”并同时附上旧的提议，proposal(n’,v’)。这样在认可新的leader身份的同时，<strong>也告诉了新的leader过去的被简单多数认可过的提议</strong></li>
+        </ol>
+      </li>
+      <li>
+        <p>prepare结果（reject）：如果proposer的提议受到了简单多数的“reject”，竞争leader宣告失败，可以放弃这一提议。</p>
+      </li>
+      <li>
+        <p>prepare结果（promise）：如果接收到了简单多数的“promise”，则该proposer成为leader，它需要从收到的promise里附带的之前accepted的提议中选取方案号（n值）最高的对应的共识；如果历史上没有被accept过的提议，leader可以自己选取一个共识v。</p>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="accept-阶段">Accept 阶段</h2>
+
+<ol>
+  <li>leader会多所有acceptor发送“accept-request(n,v)”，请求acceptor接受编号为n的共识v的提议。</li>
+  <li>每一个接收到该提议的acceptor节点：如果没有接受过<strong>编号比n更高的提议</strong>，则返回“accept”标识接受这一共识提议，否则返回“reject”</li>
+  <li>如果简单多数的acceptor返回了“accept”，则共识达成；否则共识失败，重启paxos协议。</li>
+</ol>
+
+<h2 id="注意">注意</h2>
+
+<ol>
+  <li>第一阶段竞争的并不是共识本身，而是在争取坐实leader身份获得简单多数的认可（编号越高代表优先级越高，但是并不代表优先级高的一定能抢到leader）</li>
+  <li>方案编号n本身并不是共识，而是提议的一个优先级，在多个节点竞争leader身份时可以区分优先顺序。共识本身（v）会在下一阶段leader身份确认后由leader添加进提议。</li>
+  <li>虽然这一轮只会有一个leader获得简单多数的认可，但可能有多个“糊涂”节点认为自己应该做leader。</li>
+</ol>
+
+<h2 id="paxos对2pc和3pc有几点重要的改进">Paxos对2PC和3PC有几点重要的改进</h2>
+
+<ol>
+  <li>分离共识的提议者proposer以及帮助提议最终通过的leader这两个角色
+    <ol>
+      <li>即使一个leader身份被批准，它也需要尊重历史上其他被统一过的提议</li>
+    </ol>
+  </li>
+  <li>对简单多数的巧妙应用
+    <ol>
+      <li>第一阶段里选举leader要求的简单多数保证了选举出来的leader一定不会错过之前被accept过的提议——所以就算那个提议最初的proposer挂了，也会至少被一个acceptor发给新的leader来继承。</li>
+      <li>第二阶段里要求的达成共识的简单多数保证了有多个“自以为是”的leader出现时（比如一个leader掉线，新leader选出，旧leader重新上线），一定只会有一个最后通过。</li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="paxos与2pc3pc-的关系">Paxos与2PC/3PC 的关系</h2>
+
+<h3 id="paxos如何克服2pc的问题">Paxos如何克服2PC的问题：</h3>
+
+<ol>
+  <li>2PC中coordinator是唯一而固定的，如果coordinator宕机，那么就会有情形导致coordinator之前propose的提议的投票结果丢失。就算启动新的后背coordinator，没有机制可以学习以前的投票结果。</li>
+  <li>Paxos因为分离了协议和leader，从算法上保证总可以选举出后备leader并接替前任leader的工作。</li>
+</ol>
+
+<h3 id="paxos-如何克服3pc的问题">Paxos 如何克服3PC的问题：</h3>
+
+<ol>
+  <li>3PC发生的问题在于当有多个“自认的leader”出现时，并不能有效解决coordinator之间的竞争——谁是真正的coordinator</li>
+  <li>而Paxos通过Quorum的运用，保证了多个leader之间可以互相发现。</li>
+</ol>
+
+<h2 id="paxos的局限性">Paxos的局限性</h2>
+
+<ol>
+  <li>活锁问题</li>
+</ol>
+
+<p>Paxos理论上存在一个不能终结协议的活锁竞争问题。比如一个proposer提交的提议因为编号过低被拒绝时，此proposer可能重启Paxos而提高编号重新提交。如果同时有两个proposer都发现自己的方案编号过低，从而轮流提出更高编号的proposal而导致对方被拒，可能会导致死循环（或活锁）</p>
+
+<p><img src="/assets/image-20190924183619683.png" alt="image-20190924183619683" /></p>
+
+<p><img src="/assets/image-20190924183635199.png" alt="image-20190924183635199" /></p>
+
+<p>为了保证Paxos算法流程的可持续性，以避免陷入“死循环“，就必须选择一个主proposer，并规定只有主proposer才能提出提案。</p>
+
+<ol>
+  <li>恶意节点</li>
+</ol>
+
+<p>目前为止2PC、3PC、Paxos均是假设所有节点都遵守协议的规定。当存在恶意的，可能发送任何导致协议停止或出错的消息的节点存在时，就需要有更强的共识算法在”守法节点“间达成共识。（拜占庭将军问题）</p>
+
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+
+  
+
+  
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+        <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <script>
+        var gitalk = new Gitalk({
+            id: '/2019/09/24/Paxos/',
+            clientID: 'e7435f0a5f250ac4d34e',
+            clientSecret: 'ac91c03346a9143bc06ba5fc37431917f701df2d',
+            repo: 'blog-comments',
+            owner: 'chenjunming',
+            admin: ['chenjunming'],
+            labels: ['gitment'],
+            perPage: 50,
+        })
+        gitalk.render('gitalk-container')
+        </script>
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="http://localhost:4000/assets/css/modules/sidebar-search.css">
+<script src="http://localhost:4000/assets/js/simple-jekyll-search.min.js"></script>
+<script src="http://localhost:4000/assets/js/search.js"></script>
+
+<script type="text/javascript">
+SimpleJekyllSearch({
+    searchInput: document.getElementById('search_box'),
+    resultsContainer: document.getElementById('search_results'),
+    json: 'http://localhost:4000/assets/search_data.json',
+    searchResultTemplate: '<li><a href="{url}" title="{desc}">{title}</a></li>',
+    noResultsText: 'No results found',
+    limit: 10,
+    fuzzy: false,
+    exclude: ['Welcome']
+})
+</script>
+
+    
+
+    
+<h3 class="post-directory-title mobile-hidden">Table of Contents</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="http://localhost:4000/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="CHEN junming">CHEN junming</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="https://github.com/chenjunming/chenjunming.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="http://localhost:4000/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="http://localhost:4000/about/" title="关于" target="">关于</a>
+                </li>
+                
+                <li><a href="http://localhost:4000/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <div class="tools-wrapper">
+      <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a>
+    </div>
+    <!-- / footer -->
+    <script src="http://localhost:4000/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="http://localhost:4000/assets/js/geopattern.js"></script>
+    <script src="http://localhost:4000/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>
