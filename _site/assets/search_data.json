@@ -94,6 +94,20 @@
     } ,
   
     {
+      "title"    : "《The Chubby lock service for loosely-coupled distributed systems》读后感",
+      "category" : "Paxos",
+      
+      "url"      : "http://localhost:4000/2019/11/10/Chubby/"
+    } ,
+  
+    {
+      "title"    : "浅谈Paxos",
+      "category" : "Paxos",
+      
+      "url"      : "http://localhost:4000/2019/11/10/Simple_Paxos/"
+    } ,
+  
+    {
       "title"    : "Android Studio",
       "category" : "Android",
       

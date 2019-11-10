@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>Python &mdash; 朝花夕拾</title>
+    <title>《The Chubby lock service for loosely-coupled distributed systems》读后感 &mdash; 朝花夕拾</title>
     <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-css/css/primer.css">
     <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-markdown/dist/user-content.min.css">
     <link rel="stylesheet" href="http://localhost:4000/assets/vendor/octicons/octicons/octicons.css">
@@ -21,23 +21,23 @@
     
 
     
-    <link rel="canonical" href="http://localhost:4000/wiki/python/">
+    <link rel="canonical" href="http://localhost:4000/2019/11/10/Chubby/">
     <link rel="alternate" type="application/atom+xml" title="朝花夕拾" href="http://localhost:4000/feed.xml">
     <link rel="shortcut icon" href="http://localhost:4000/favicon.ico">
     
-    <meta property="og:title" content="Python">
+    <meta property="og:title" content="《The Chubby lock service for loosely-coupled distributed systems》读后感">
       
-    <meta name="keywords" content="Python">
-    <meta name="og:keywords" content="Python">
+    <meta name="keywords" content="Chubby,paper">
+    <meta name="og:keywords" content="Chubby,paper">
       
-    <meta name="description" content="requests">
-    <meta name="og:description" content="requests">
+    <meta name="description" content="">
+    <meta name="og:description" content="">
       
     
     
         
     
-    <meta property="og:url" content="http://localhost:4000/wiki/python/">
+    <meta property="og:url" content="http://localhost:4000/2019/11/10/Chubby/">
     <meta property="og:site_name" content="朝花夕拾">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="zh_CN" />
@@ -74,12 +74,35 @@
     </header>
     <!-- / header -->
 
-    <section class="collection-head small geopattern" data-pattern-id="Python">
+    <section class="collection-head small geopattern" data-pattern-id="《The Chubby loc">
 <div class="container">
   <div class="columns">
     <div class="column three-fourths">
       <div class="collection-title">
-        <h1 class="collection-header">Python</h1>
+        <h1 class="collection-header">《The Chubby lock service for loosely-coupled distributed systems》读后感</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2019/11/10
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#Paxos" title="Paxos">Paxos</a>
+          </span>
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#分布式协议" title="分布式协议">分布式协议</a>
+          </span>
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#技术" title="技术">技术</a>
+          </span>
+          
+        </div>
       </div>
     </div>
   </div>
@@ -90,68 +113,7 @@
 <div class="columns">
   <div class="column three-fourths" >
     <article class="article-content markdown-body">
-    <h3 id="requests">requests</h3>
-
-<p>优雅简单的 HTTP 模块。</p>
-
-<h3 id="beautifulsoup">BeautifulSoup</h3>
-
-<p>很好用的 HTML/XML 解析器。</p>
-
-<h3 id="json">json</h3>
-
-<p>JSON 编码解码器。</p>
-
-<p>应用举例：</p>
-
-<ul>
-  <li>
-    <p>格式化 JSON 文件</p>
-
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> json.tool src.json <span class="o">&gt;</span> dst.json
-</code></pre></div>    </div>
-
-    <p>在 Vim 里格式化 JSON：</p>
-
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:%!python <span class="nt">-m</span> json.tool
-</code></pre></div>    </div>
-  </li>
-</ul>
-
-<h3 id="cgihttpserver">CGIHTTPServer</h3>
-
-<p>简单实用的 HTTP 服务器。</p>
-
-<p>应用举例：</p>
-
-<ul>
-  <li>
-    <p>运行一个简易的 HTTP 服务器</p>
-
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> CGIHTTPServer 80
-</code></pre></div>    </div>
-  </li>
-</ul>
-
-<h3 id="base64">base64</h3>
-
-<p>方便地进行 base64 编解码的模块。</p>
-
-<p>应用举例：</p>
-
-<ul>
-  <li>
-    <p>解码 base64</p>
-
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo </span><span class="nv">aGVsbG93b3JsZA</span><span class="o">==</span> | python <span class="nt">-m</span> base64 <span class="nt">-d</span>
-</code></pre></div>    </div>
-
-    <p>则能看到输出</p>
-
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helloworld
-</code></pre></div>    </div>
-  </li>
-</ul>
+    <p><img src="/assets/Chubby.png" alt="chubby" /></p>
 
     </article>
     <div class="share">
@@ -168,7 +130,7 @@
         <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
         <script>
         var gitalk = new Gitalk({
-            id: '/wiki/python/',
+            id: '/2019/11/10/Chubby/',
             clientID: 'e7435f0a5f250ac4d34e',
             clientSecret: 'ac91c03346a9143bc06ba5fc37431917f701df2d',
             repo: 'blog-comments',
